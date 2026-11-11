@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatelessWidget {
-  MyHomePage({super.key});
+  const MyHomePage({super.key});
 
   final String npm = "2506624101";
   final String nama = "Hafiza Nurul Hidayah";
   final String kelas = "PBP D";
 
-  final List<ItemHomepage> items = [
-    ItemHomepage("Lihat Experience", Icons.folder),
-    ItemHomepage("Tambah Experience", Icons.add_circle),
-    ItemHomepage("Logout", Icons.logout),
-  ];
+  static const List<ItemHomepage> items = [
+  ItemHomepage("Lihat Experience", Icons.folder_open,Color(0xFF1E5B3A),),
+  ItemHomepage("Tambah Experience",Icons.add_circle, Color(0xFFF35F9B),),
+  ItemHomepage("Logout",Icons.logout,Color(0xFFE58B55),),
+];
 
 
    @override
@@ -47,6 +47,7 @@ class MyHomePage extends StatelessWidget {
 
             const SizedBox(height: 16.0),
 
+
             // Bagian tengah: pesan sambutan dan kisi tombol menu portofolio.
             Center(
               child: Column(
@@ -54,7 +55,7 @@ class MyHomePage extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.only(top: 16.0),
                     child: Text(
-                      'Selamat datang di MyPortfolio Mobile!',
+                      "Welcome to Hafiza's portofolio!",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18.0,
@@ -64,10 +65,10 @@ class MyHomePage extends StatelessWidget {
 
                   // GridView menampilkan kartu tombol dalam tata letak kisi 3 kolom.
                   GridView.count(
-                    primary: true,
-                    padding: const EdgeInsets.all(20),
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
+                    primary: false,
+                    padding: const EdgeInsets.all(8),
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
                     crossAxisCount: 3,
                     // shrinkWrap agar ukuran kisi menyesuaikan tinggi konten anak.
                     shrinkWrap: true,
@@ -96,7 +97,11 @@ class InfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       // Memberikan efek bayangan kartu elevasi 2 unit.
+      color: const Color(0xFFF7CFDF),
       elevation: 2.0,
+      shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+      ),
       child: Container(
         // Menyesuaikan lebar kartu dengan proporsi layar (dibagi 3.5).
         width: MediaQuery.of(context).size.width / 3.5,
@@ -117,13 +122,17 @@ class InfoCard extends StatelessWidget {
   }
 }
 
+// model untuk setiap tombol di portfolio
 class ItemHomepage {
   final String name;
   final IconData icon;
+  final Color color;
 
-  ItemHomepage(this.name, this.icon);
+
+  const ItemHomepage(this.name, this.icon, this.color);
 }
 
+// widget kartu untuk tombol aksi
 class ItemCard extends StatelessWidget {
   final ItemHomepage item;
 
@@ -145,7 +154,7 @@ class ItemCard extends StatelessWidget {
               SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!"))
             );
         },
-        child: Container(
+        child: Padding(
           padding: const EdgeInsets.all(8),
           child: Center(
             child: Column(
