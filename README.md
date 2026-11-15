@@ -16,6 +16,9 @@ A personal portfolio mobile application built with Flutter** and Dart as part of
   - Logout
 - **SnackBar Notifications** — Displays a notification whenever an action card is pressed.
 - **Custom UI Design** — Uses a pastel-inspired color palette with a clean and playful layout.
+- **My Profile / About Me** — Halaman tambahan yang
+  memperkenalkan profil pribadi, latar belakang pendidikan,
+  minat, dan ketertarikan melalui desain yang playful.
 
 ## Design & Color Palette
 
@@ -37,6 +40,7 @@ The application uses a soft color palette to create a friendly and playful exper
 ## Project Structure
 ```text
 myportofolio_mobile/
+├── assets/
 ├── lib/
 │   ├── main.dart
 │   └── menu.dart
@@ -48,19 +52,30 @@ myportofolio_mobile/
 ```
 
 ## AI Usage Disclosure
-Dalam proses pengembangan aplikasi ini, saya menggunakan ChatGPT, Gemini, dan Claude sebagai alat bantu untuk mendukung proses pembelajaran dan implementasi.
+Dalam proses pengembangan aplikasi ini, saya menggunakan ChatGPT 
+sebagai alat bantu untuk mendukung proses pembelajaran dan implementasi.
 
-The AI assistance included:
-- Understanding Flutter concepts and the structure of a Flutter project.
-- Discussing UI/UX ideas and color palette choices.
-- Assisting with the implementation and organization of Flutter widgets.
-- Helping identify and resolve programming errors, including Dart `const` and widget-related issues.
-- Providing suggestions for improving code readability and project documentation.
+Strategi prompting yang diterapkan meliputi:
 
-Seluruh saran dan kode yang dihasilkan AI ditinjau dan disesuaikan kembali selama proses pengerjaan. AI digunakan sebagai alat bantu pembelajaran, bukan sebagai pengganti pemahaman terhadap implementasi kode.
+- Concept Exploration: Meminta penjelasan mengenai konsep Flutter, Dart, widget, constructor, dan penggunaan const untuk memahami materi sebelum mengimplementasikannya.
 
-Link AI Chat Tugas 7 : 
+- Code Assistance: Meminta bantuan dalam menyusun dan mengembangkan widget Flutter, termasuk InfoCard dan ItemCard.
 
+- Debugging: Memberikan pesan error dan potongan kode agar AI dapat membantu mengidentifikasi kemungkinan penyebab masalah serta menjelaskan alternatif solusinya.
+
+- UI/UX Brainstorming: Mendiskusikan ide desain, pemilihan warna, dan pengembangan fitur tambahan seperti My Profile / About Me.
+
+- Documentation Assistance: Menggunakan AI untuk membantu menyusun struktur README dan memperjelas dokumentasi proyek.
+
+Meskipun AI membantu mempercepat proses pengembangan, hasil yang diberikan tidak selalu dapat langsung diterapkan.
+Salah satu keterbatasannya adalah kode yang dihasilkan terkadang belum sepenuhnya sesuai dengan struktur proyek yang sedang digunakan. Misalnya, perubahan pada constructor atau penggunaan const dapat menimbulkan error apabila tidak disesuaikan dengan deklarasi widget lainnya.
+
+Maka dari itu seluruh saran dan kode yang dihasilkan AI ditinjau dan disesuaikan kembali selama proses pengerjaan. AI digunakan sebagai alat bantu pembelajaran, bukan sebagai pengganti pemahaman terhadap implementasi kode.
+
+Link AI Chat Tugas 7 : https://chatgpt.com/share/6af9be7c-4208-83ec-88ee-4c8ce7ee9e63
+Dokumentasi ini mencakup proses eksplorasi ide, implementasi kode, debugging, hingga pengembangan fitur tambahan.
+
+Sebagai bentuk pengembangan kreativitas dalam pengerjaan Tugas 7, saya menambahkan fitur My Profile / About Me pada aplikasi MyPortfolio Mobile. Penambahan fitur ini diharapkan dapat membuat aplikasi portofolio tidak hanya berfungsi sebagai tempat menampilkan informasi dasar, tetapi juga menjadi media untuk memperkenalkan diri dengan cara yang lebih menarik dan personal.
 
 ### Tugas 7
 1. Widget tree adalah representasi hierarkis atau struktur bertingkat dari seluruh widget yang digunakan untuk membangun antarmuka aplikasi Flutter. Widget direpresentasikan sebagai node dalam sebuah tree. Struktur ini digunakan Flutter selama proses layout untuk menentukan ukuran dan posisi widget, rendering untuk menampilkan tampilan ke layar, serta hit testing untuk mendeteksi interaksi pengguna.
