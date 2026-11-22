@@ -10,6 +10,8 @@ class MyHomePage extends StatelessWidget {
   final String kelas = "PBP D";
 
   static const List<ItemHomepage> items = [
+    ItemHomepage("Lihat Project", Icons.folder_open, Color(0xFF1E5B3A)),
+    ItemHomepage("Tambah Project", Icons.add_circle, Color(0xFFF35F9B)),
     ItemHomepage("Lihat Experience", Icons.folder_open, Color(0xFF1E5B3A)),
     ItemHomepage("Tambah Experience", Icons.add_circle, Color(0xFFF35F9B)),
     ItemHomepage("Logout", Icons.logout, Color(0xFFE58B55)),
@@ -65,19 +67,29 @@ class MyHomePage extends StatelessWidget {
                     ),
 
                     // GridView menampilkan kartu tombol dalam tata letak kisi 3 kolom.
-                    GridView.count(
-                      primary: false,
-                      padding: const EdgeInsets.all(8),
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      crossAxisCount: 3,
-                      // shrinkWrap agar ukuran kisi menyesuaikan tinggi konten anak.
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: items.map((ItemHomepage item) {
-                        return ItemCard(item);
-                      }).toList(),
+                   // Grid 2x2 untuk empat menu utama
+                  GridView.count(
+                    primary: false,
+                    padding: const EdgeInsets.all(8),
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: items
+                        .where((item) => item.name != "Logout")
+                        .map((item) => ItemCard(item))
+                        .toList(),
+                  ),
+
+                  // Logout di bagian paling bawah
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ItemCard(items.last),
                     ),
+                  ),
                   ],
                 ),
               ),
