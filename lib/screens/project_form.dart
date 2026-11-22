@@ -30,7 +30,7 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(child: Text('Add Project Form')),
-        backgroundColor: Colors.indigo,
+        backgroundColor: const Color(0xFFF35F9B),
         foregroundColor: Colors.white,
       ),
 
@@ -86,7 +86,6 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                       _description = value;
                     });
                   },
-
                   validator: (String? value) {
                     if (value == null || value.trim().isEmpty) {
                       return "Deskripsi proyek tidak boleh kosong!";
@@ -170,7 +169,9 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(Colors.indigo),
+                      backgroundColor: WidgetStateProperty.all(
+                        const Color(0xFFF35F9B),
+                      ),
                     ),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
@@ -202,6 +203,7 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                                   onPressed: () {
                                     Navigator.pop(context);
                                     _formKey.currentState!.reset();
+
                                     setState(() {
                                       _projectName = "";
                                       _description = "";

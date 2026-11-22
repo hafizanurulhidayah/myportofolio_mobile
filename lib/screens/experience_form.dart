@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
 
@@ -11,12 +12,18 @@ class ExperienceFormPage extends StatefulWidget {
 class _ExperienceFormPageState extends State<ExperienceFormPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _positionController = TextEditingController();
-  final TextEditingController _organizationController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _positionController =
+      TextEditingController();
+  final TextEditingController _organizationController =
+      TextEditingController();
+  final TextEditingController _descriptionController =
+      TextEditingController();
 
   DateTime? _startDate;
   DateTime? _endDate;
+
+  String? _startDateError;
+  String? _endDateError;
 
   Future<void> _selectDate(bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
@@ -32,13 +39,14 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
       setState(() {
         if (isStartDate) {
           _startDate = picked;
+          _startDateError = null;
 
-          // Reset end date if it becomes earlier than start date.
           if (_endDate != null && _endDate!.isBefore(picked)) {
             _endDate = null;
           }
         } else {
           _endDate = picked;
+          _endDateError = null;
         }
       });
     }
@@ -46,50 +54,64 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
 
   String? _validateRequired(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Field ini wajib diisi.';
+      return 'Field ini wajib diisi!';
     }
 
     if (value.trim().length < 2) {
-      return 'Minimal 2 karakter.';
+      return 'Minimal 2 karakter!';
     }
 
     return null;
   }
 
-  void _showResultDialog() {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
 
-    if (_startDate == null || _endDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Silakan pilih Start Date dan End Date.')),
-      );
-      return;
-    }
+  void _saveExperience() {
+    final isFormValid = _formKey.currentState!.validate();
 
-    if (_endDate!.isBefore(_startDate!)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('End Date tidak boleh sebelum Start Date.'),
-        ),
-      );
+    setState(() {
+      _startDateError =
+          _startDate == null ? 'Start Date wajib dipilih!' : null;
+
+      _endDateError =
+          _endDate == null ? 'End Date wajib dipilih!' : null;
+
+      if (_startDate != null &&
+          _endDate != null &&
+          _endDate!.isBefore(_startDate!)) {
+        _endDateError = 'End Date tidak boleh sebelum Start Date!';
+      }
+    });
+
+    if (!isFormValid ||
+        _startDateError != null ||
+        _endDateError != null) {
       return;
     }
 
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Experience Berhasil Ditambahkan!'),
+          title: const Text('Experience berhasil ditambahkan!'),
           content: SingleChildScrollView(
-            child: ListBody(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Position: ${_positionController.text.trim()}'),
+                Text(
+                  'Position: ${_positionController.text.trim()}',
+                ),
                 const SizedBox(height: 8),
-                Text('Organization: ${_organizationController.text.trim()}'),
+                Text(
+                  'Organization: ${_organizationController.text.trim()}',
+                ),
                 const SizedBox(height: 8),
-                Text('Description: ${_descriptionController.text.trim()}'),
+                Text(
+                  'Description: ${_descriptionController.text.trim()}',
+                ),
                 const SizedBox(height: 8),
                 Text('Start Date: ${_formatDate(_startDate!)}'),
                 const SizedBox(height: 8),
@@ -98,21 +120,29 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
             ),
           ),
           actions: [
-            TextButton( 
-             onPressed: () {
-                Navigator.pop(context); // Tutup dialog
-                Navigator.pop(context); // Kembali ke halaman sebelumnya
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.pop(dialogContext);
+
+                _formKey.currentState!.reset();
+
+                _positionController.clear();
+                _organizationController.clear();
+                _descriptionController.clear();
+
+                setState(() {
+                  _startDate = null;
+                  _endDate = null;
+                  _startDateError = null;
+                  _endDateError = null;
+                });
               },
-              child: const Text('Tutup'),
             ),
           ],
         );
       },
     );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
   }
 
   @override
@@ -127,124 +157,150 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Experience'),
+        title: const Center(
+          child: Text('Add Experience Form'),
+        ),
         backgroundColor: const Color(0xFFF35F9B),
         foregroundColor: Colors.white,
       ),
+
       drawer: const LeftDrawer(),
+
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Add Your Experience',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Fill in the details of your experience below.',
-                style: TextStyle(color: Colors.grey),
-              ),
-              const SizedBox(height: 24),
-
               // Position / Role
-              TextFormField(
-                controller: _positionController,
-                decoration: const InputDecoration(
-                  labelText: 'Position / Role',
-                  hintText: 'e.g. Software Engineer Intern',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.work_outline),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: _positionController,
+                  decoration: InputDecoration(
+                    hintText: 'Contoh: Software Engineer Intern',
+                    labelText: 'Position / Role',
+                    prefixIcon: const Icon(Icons.work_outline),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                  validator: _validateRequired,
                 ),
-                validator: _validateRequired,
               ),
-              const SizedBox(height: 16),
 
               // Organization
-              TextFormField(
-                controller: _organizationController,
-                decoration: const InputDecoration(
-                  labelText: 'Organization',
-                  hintText: 'e.g. RISTEK Fasilkom UI',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.business),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: _organizationController,
+                  decoration: InputDecoration(
+                    hintText: 'Contoh: RISTEK Fasilkom UI',
+                    labelText: 'Organization',
+                    prefixIcon: const Icon(Icons.business),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                  validator: _validateRequired,
                 ),
-                validator: _validateRequired,
               ),
-              const SizedBox(height: 16),
 
               // Description
-              TextFormField(
-                controller: _descriptionController,
-                maxLines: 4,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                  hintText:
-                      'Describe your responsibilities and achievements...',
-                  border: OutlineInputBorder(),
-                  alignLabelWithHint: true,
-                  prefixIcon: Icon(Icons.description_outlined),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: _descriptionController,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    hintText: 'Deskripsi pengalaman',
+                    labelText: 'Description',
+                    alignLabelWithHint: true,
+                    prefixIcon: const Icon(Icons.description_outlined),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                  validator: _validateRequired,
                 ),
-                validator: _validateRequired,
               ),
-              const SizedBox(height: 20),
 
               // Start Date
-              const Text(
-                'Start Date',
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: () => _selectDate(true),
-                  icon: const Icon(Icons.calendar_today),
-                  label: Text(
-                    _startDate == null
-                        ? 'Select Start Date'
-                        : _formatDate(_startDate!),
-                  ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: () => _selectDate(true),
+                      icon: const Icon(Icons.calendar_today),
+                      label: Text(
+                        _startDate == null
+                            ? 'Select Start Date'
+                            : 'Start Date: ${_formatDate(_startDate!)}',
+                      ),
+                    ),
+                    if (_startDateError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5, left: 12),
+                        child: Text(
+                          _startDateError!,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 16),
 
               // End Date
-              const Text(
-                'End Date',
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: () => _selectDate(false),
-                  icon: const Icon(Icons.calendar_today),
-                  label: Text(
-                    _endDate == null
-                        ? 'Select End Date'
-                        : _formatDate(_endDate!),
-                  ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: () => _selectDate(false),
+                      icon: const Icon(Icons.calendar_today),
+                      label: Text(
+                        _endDate == null
+                            ? 'Select End Date'
+                            : 'End Date: ${_formatDate(_endDate!)}',
+                      ),
+                    ),
+                    if (_endDateError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5, left: 12),
+                        child: Text(
+                          _endDateError!,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 28),
 
               // Save Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _showResultDialog,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF35F9B),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: const Text(
-                    'Save Experience',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(
+                        const Color(0xFFF35F9B),
+                      ),
+                    ),
+                    onPressed: _saveExperience,
+                    child: const Text(
+                      'Save',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),
