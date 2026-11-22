@@ -67,19 +67,29 @@ class MyHomePage extends StatelessWidget {
                     ),
 
                     // GridView menampilkan kartu tombol dalam tata letak kisi 3 kolom.
-                    GridView.count(
-                      primary: false,
-                      padding: const EdgeInsets.all(8),
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      crossAxisCount: 3,
-                      // shrinkWrap agar ukuran kisi menyesuaikan tinggi konten anak.
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: items.map((ItemHomepage item) {
-                        return ItemCard(item);
-                      }).toList(),
+                   // Grid 2x2 untuk empat menu utama
+                  GridView.count(
+                    primary: false,
+                    padding: const EdgeInsets.all(8),
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: items
+                        .where((item) => item.name != "Logout")
+                        .map((item) => ItemCard(item))
+                        .toList(),
+                  ),
+
+                  // Logout di bagian paling bawah
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ItemCard(items.last),
                     ),
+                  ),
                   ],
                 ),
               ),
