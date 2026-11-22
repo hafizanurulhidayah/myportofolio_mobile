@@ -43,7 +43,13 @@ myportofolio_mobile/
 ├── assets/
 ├── lib/
 │   ├── main.dart
-│   └── menu.dart
+│   ├── screens/
+│   │   ├── menu.dart
+│   │   ├── project_form.dart
+│   │   └── experience_form.dart
+│   └── widgets/
+│       ├── left_drawer.dart
+│       └── project_card.dart
 ├── android/
 ├── ios/
 ├── web/
@@ -56,15 +62,10 @@ Dalam proses pengembangan aplikasi ini, saya menggunakan ChatGPT
 sebagai alat bantu untuk mendukung proses pembelajaran dan implementasi.
 
 Strategi prompting yang diterapkan meliputi:
-
 - Concept Exploration: Meminta penjelasan mengenai konsep Flutter, Dart, widget, constructor, dan penggunaan const untuk memahami materi sebelum mengimplementasikannya.
-
 - Code Assistance: Meminta bantuan dalam menyusun dan mengembangkan widget Flutter, termasuk InfoCard dan ItemCard.
-
 - Debugging: Memberikan pesan error dan potongan kode agar AI dapat membantu mengidentifikasi kemungkinan penyebab masalah serta menjelaskan alternatif solusinya.
-
 - UI/UX Brainstorming: Mendiskusikan ide desain, pemilihan warna, dan pengembangan fitur tambahan seperti My Profile / About Me.
-
 - Documentation Assistance: Menggunakan AI untuk membantu menyusun struktur README dan memperjelas dokumentasi proyek.
 
 Meskipun AI membantu mempercepat proses pengembangan, hasil yang diberikan tidak selalu dapat langsung diterapkan.
@@ -75,7 +76,13 @@ Maka dari itu seluruh saran dan kode yang dihasilkan AI ditinjau dan disesuaikan
 Link AI Chat Tugas 7 : https://chatgpt.com/share/6af9be7c-4208-83ec-88ee-4c8ce7ee9e63
 Dokumentasi ini mencakup proses eksplorasi ide, implementasi kode, debugging, hingga pengembangan fitur tambahan.
 
+Link AI Chat Tugas 8: https://chatgpt.com/share/6b02ea65-ee8c-83ec-9304-798a4bf9a57f
+Dokumentasi ini mencakup proses eksplorasi ide, implementasi kode, debugging, hingga pengembangan fitur tambahan.
+
 Sebagai bentuk pengembangan kreativitas dalam pengerjaan Tugas 7, saya menambahkan fitur My Profile / About Me pada aplikasi MyPortfolio Mobile. Penambahan fitur ini diharapkan dapat membuat aplikasi portofolio tidak hanya berfungsi sebagai tempat menampilkan informasi dasar, tetapi juga menjadi media untuk memperkenalkan diri dengan cara yang lebih menarik dan personal.
+
+Sebagai bentuk pengembangan tampilan pada Tugas 8, saya melakukan penyesuaian pada susunan card menu di homepage. Sebelumnya, card ditampilkan dalam tiga kolom. Saya mengubahnya menjadi layout dua kolom dengan susunan 2 × 2 untuk empat menu utama, yaitu Lihat Projects, Tambah Projects, Lihat Experience, dan Tambah Experience.
+Selain itu, tombol Logout saya pisahkan dari keempat card tersebut dan tempatkan di bagian bawah. Perubahan ini bertujuan agar susunan menu terlihat lebih terorganisasi dan memberikan tampilan yang lebih rapi serta nyaman digunakan, khususnya pada perangkat mobile.
 
 ### Tugas 7
 1. Widget tree adalah representasi hierarkis atau struktur bertingkat dari seluruh widget yang digunakan untuk membangun antarmuka aplikasi Flutter. Widget direpresentasikan sebagai node dalam sebuah tree. Struktur ini digunakan Flutter selama proses layout untuk menentukan ukuran dan posisi widget, rendering untuk menampilkan tampilan ke layar, serta hit testing untuk mendeteksi interaksi pengguna.
@@ -195,3 +202,36 @@ Karakteristik:
 
 Gunakan full restart ketika melakukan perubahan yang membutuhkan pembangunan ulang aplikasi atau perubahan pada konfigurasi native, seperti konfigurasi Android/iOS atau plugin tertentu.
 
+### Tugas 8 
+Pada Tugas 8, saya mengembangkan aplikasi portfolio Flutter dengan menambahkan halaman form untuk mengelola data Experience. Selain itu, saya juga melakukan beberapa penyesuaian pada tampilan homepage dan navigasi agar fitur baru dapat diakses dengan mudah.
+
+Beberapa penambahan fitur yang ditambahkkan adalah : 
+1. Project Form dan Experience Form
+2. Validate Form
+3. Menampilkan data dengan alertdialog
+4. Menambahkan navigasi experienceform dan projectform
+5. Menyesuaikan konsistensi tampilan
+
+Pengujian
+Saya melakukan pengujian terhadap fitur ProjectForm dan ExperienceForm, termasuk:
+Memastikan seluruh field wajib diisi.
+Memastikan validasi minimal karakter berjalan.
+Memastikan Start Date dan End Date harus diisi.
+Memastikan End Date tidak boleh lebih awal daripada Start Date.
+Memastikan AlertDialog menampilkan seluruh data yang dimasukkan.
+Memastikan form kembali kosong setelah dialog ditutup.
+Memastikan navigasi melalui homepage dan drawer berjalan dengan baik.
+
+Jawaban Pertanyaan Reflektif : 
+1. Navigasi (push, pushReplacement, pop) dan Drawer
+- Navigator.push() menumpuk halaman baru di atas halaman aktif (dipakai untuk membuka form dari kartu aksi agar pengguna bisa kembali ke halaman sebelumnya).
+- Navigator.pushReplacement() mengganti halaman aktif saat ini dengan halaman tujuan (dipakai pada opsi Home di drawer agar tumpukan rute tidak menumpuk berulang).
+- Navigator.pop() menutup halaman paling atas dan kembali ke halaman sebelumnya (atau menutup dialog).
+
+2. Konsistensi Struktur (Scaffold, AppBar, Drawer) & Warna Tema
+Kombinasi Scaffold, AppBar, dan Drawer menjaga struktur dan akses navigasi tetap seragam di tiap halaman. Contohnya, warna pink Color(0xFFF35F9B) pada AppBar dipakai konsisten di halaman utama maupun halaman form (ProjectFormPage dan ExperienceFormPage) untuk mempertahankan identitas visual portofolio.
+
+3. Tata Letak Formulir & Validasi Input
+Susunan Form + Column dipilih agar alur input dan tombol Simpan rapi dan mudah dijangkau. Widget pengatur jarak (Padding, SizedBox) mencegah elemen saling berdempetan, sedangkan SingleChildScrollView menjaga semua input dan tombol tetap bisa di-scroll saat layar sempit atau keyboard muncul.
+
+Saat tombol Simpan ditekan, GlobalKey<FormState> mengakses state form untuk memanggil validate(), yang menjalankan fungsi validator pada tiap field. Misalnya, input kosong atau hanya spasi ("   ") akan ditolak. Jenis input atau tipe keyboard saja tidak cukup karena hanya mempermudah cara mengetik dan tidak memvalidasi aturan isi data (seperti wajib isi, panjang minimal, atau urutan tanggal).
