@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
 
@@ -12,12 +11,9 @@ class ExperienceFormPage extends StatefulWidget {
 class _ExperienceFormPageState extends State<ExperienceFormPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _positionController =
-      TextEditingController();
-  final TextEditingController _organizationController =
-      TextEditingController();
-  final TextEditingController _descriptionController =
-      TextEditingController();
+  final TextEditingController _positionController = TextEditingController();
+  final TextEditingController _organizationController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   DateTime? _startDate;
   DateTime? _endDate;
@@ -72,11 +68,9 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
     final isFormValid = _formKey.currentState!.validate();
 
     setState(() {
-      _startDateError =
-          _startDate == null ? 'Start Date wajib dipilih!' : null;
+      _startDateError = _startDate == null ? 'Start Date wajib dipilih!' : null;
 
-      _endDateError =
-          _endDate == null ? 'End Date wajib dipilih!' : null;
+      _endDateError = _endDate == null ? 'End Date wajib dipilih!' : null;
 
       if (_startDate != null &&
           _endDate != null &&
@@ -85,9 +79,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
       }
     });
 
-    if (!isFormValid ||
-        _startDateError != null ||
-        _endDateError != null) {
+    if (!isFormValid || _startDateError != null || _endDateError != null) {
       return;
     }
 
@@ -101,17 +93,11 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Position: ${_positionController.text.trim()}',
-                ),
+                Text('Position: ${_positionController.text.trim()}'),
                 const SizedBox(height: 8),
-                Text(
-                  'Organization: ${_organizationController.text.trim()}',
-                ),
+                Text('Organization: ${_organizationController.text.trim()}'),
                 const SizedBox(height: 8),
-                Text(
-                  'Description: ${_descriptionController.text.trim()}',
-                ),
+                Text('Description: ${_descriptionController.text.trim()}'),
                 const SizedBox(height: 8),
                 Text('Start Date: ${_formatDate(_startDate!)}'),
                 const SizedBox(height: 8),
@@ -157,9 +143,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Add Experience Form'),
-        ),
+        title: const Center(child: Text('Add Experience Form')),
         backgroundColor: const Color(0xFFF35F9B),
         foregroundColor: Colors.white,
       ),

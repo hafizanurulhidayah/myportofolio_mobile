@@ -1,0 +1,142 @@
+
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../models/project.dart';
+import '../services/api_client.dart';
+import '../widgets/left_drawer.dart';
+import 'project_detail_screen.dart';
+
+class ProjectListScreen extends StatefulWidget {
+  const ProjectListScreen({super.key});
+
+  @override
+  State<ProjectListScreen> createState() => _ProjectListScreenState();
+}
+
+class _ProjectListScreenState extends State<ProjectListScreen> {
+  late Future<List<Project>> _projectsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _projectsFuture = context.read<ApiClient>().getProjects();
+  }
+
+  Future<void> _reload() async {
+    final future = context.read<ApiClient>().getProjects();
+
+    setState(() {
+      _projectsFuture = future;
+    });
+
+    try {
+      await future;
+    } catch (_) {
+      // Error ditampilkan oleh FutureBuilder.
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Achievements: Projects'),
+      ),
+      drawer: const LeftDrawer(),
+      body: FutureBuilder<List<Project>>(
+        future: _projectsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Failed to load projects: ${snapshot.error}',
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton.icon(
+                      onPressed: _reload,
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          final projects = snapshot.data ?? const <Project>[];
+
+          if (projects.isEmpty) {
+            return RefreshIndicator(
+              onRefresh: _reload,
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: const [
+                  SizedBox(
+                    height: 300,
+                    child: Center(
+                      child: Text('No projects found.'),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return RefreshIndicator(
+            onRefresh: _reload,
+            child: ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: projects.length,
+              itemBuilder: (context, index) {
+                final project = projects[index];
+
+                return Card(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: ListTile(
+                    title: Text(project.title),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(project.techStack),
+                        const SizedBox(height: 4),
+                        Text(project.description),
+                      ],
+                    ),
+                    isThreeLine: true,
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProjectDetailScreen(
+                            project: project,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
