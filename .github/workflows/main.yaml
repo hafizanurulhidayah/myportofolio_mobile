@@ -3,7 +3,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: 
+    - main
+    - tutorial_10
   pull_request:
 
 concurrency:
